@@ -484,12 +484,7 @@ def main() -> None:
     )
 
     dataset = load(args.input, args.nproc)
-    if args.config is not None:
-        bdd100k_config = load_bdd100k_config(args.config)
-    elif dataset.config is not None:
-        bdd100k_config = BDD100KConfig(config=dataset.config)
-    else:
-        bdd100k_config = load_bdd100k_config(args.mode)
+    bdd100k_config = load_bdd100k_config(args.mode, dataset, args.config)
 
     if args.mode in ["ins_seg", "seg_track"]:
         frames = bdd100k_to_scalabel(dataset.frames, bdd100k_config)

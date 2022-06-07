@@ -102,9 +102,7 @@ def bitmasks_loader(mask_name: str) -> Tuple[List[InstanceType], ImageSize]:
     category_map = bitmask[:, :, 0]
     attributes_map = bitmask[:, :, 1]
     instance_map = (bitmask[:, :, 2] << 8) + bitmask[:, :, 3]
-    indentity_map = (
-        (category_map << 24) + (attributes_map << 16) + instance_map
-    )
+    indentity_map = (category_map << 24) + (attributes_map << 16) + instance_map
 
     instances: List[InstanceType] = []
 
@@ -508,21 +506,13 @@ def main() -> None:
             seg_track=bitmask2coco_seg_track,
         )[args.mode]
 
-        cfg_path = args.config if args.config is not None else args.mode
-        bdd100k_config = load_bdd100k_config(cfg_path)
+        bdd100k_config = load_bdd100k_config(args.mode, None, args.config)
         logger.info("Start format converting...")
-        coco = convert_function(
-            args.input, bdd100k_config.scalabel, args.nproc
-        )
+        coco = convert_function(args.input, bdd100k_config.scalabel, args.nproc)
     else:
         logger.info("Loading annotations...")
         dataset = load(args.input, args.nproc)
-        if args.config is not None:
-            bdd100k_config = load_bdd100k_config(args.config)
-        elif dataset.config is not None:
-            bdd100k_config = BDD100KConfig(config=dataset.config)
-        else:
-            bdd100k_config = load_bdd100k_config(args.mode)
+        bdd100k_config = load_bdd100k_config(args.mode, dataset, args.config)
 
         if args.mode in ["det", "box_track", "pose"]:
             convert_func = dict(

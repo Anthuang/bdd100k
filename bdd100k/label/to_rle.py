@@ -27,7 +27,7 @@ def parse_args() -> argparse.Namespace:
     """Parse arguments."""
     parser = argparse.ArgumentParser(description="mask to RLE conversion")
     parser.add_argument(
-        "-i", "--input", help=("directory of bitmasks to convert")
+        "-i", "--input", help="directory of bitmasks to convert"
     )
     parser.add_argument(
         "-o",
@@ -150,13 +150,9 @@ def main() -> None:
 
     assert os.path.isdir(args.input)
 
-    dataset = load(args.input, args.nproc)
-    if args.config is not None:
-        bdd100k_config = load_bdd100k_config(args.config)
-    elif dataset.config is not None:
-        bdd100k_config = BDD100KConfig(config=dataset.config)
-    else:
-        bdd100k_config = load_bdd100k_config(args.mode)
+    bdd100k_config = load_bdd100k_config(
+        args.mode, load(args.input, args.nproc), args.config
+    )
 
     categories = get_leaf_categories(bdd100k_config.scalabel.categories)
 

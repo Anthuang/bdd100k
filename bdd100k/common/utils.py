@@ -3,11 +3,11 @@
 import os
 import os.path as osp
 from itertools import groupby
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from scalabel.common.io import load_config
 from scalabel.label.to_coco import get_instance_id
-from scalabel.label.typing import Label
+from scalabel.label.typing import Dataset, Label
 from scalabel.label.utils import check_crowd, check_ignored
 
 from .logger import logger
@@ -69,8 +69,8 @@ def check_bdd100k_ignored(label: Label) -> bool:
     return check_ignored(label)
 
 
-def load_bdd100k_config(cfg_path: str) -> BDD100KConfig:
-    """Load a task-specific config."""
+def get_bdd100k_config(cfg_path: str) -> BDD100KConfig:
+    """Obtains a bdd100k config from the filesystem."""
     if not cfg_path.endswith("toml"):
         cfg_path = osp.join(
             osp.split(osp.dirname(osp.abspath(__file__)))[0],
@@ -80,6 +80,18 @@ def load_bdd100k_config(cfg_path: str) -> BDD100KConfig:
     assert osp.exists(cfg_path), f"Task config {cfg_path} does not exist."
     config = load_config(cfg_path)
     return BDD100KConfig(**config)
+
+
+def load_bdd100k_config(
+    mode: str, dataset: Optional[Dataset], config: Optional[str]
+) -> BDD100KConfig:
+    """Load a task-specific config."""
+    if config is not None:
+        return get_bdd100k_config(config)
+    elif dataset is not None and dataset.config is not None:
+        return BDD100KConfig(config=dataset.config)
+    else:
+        return get_bdd100k_config(mode)
 
 
 def reorder_preds(gt_paths: List[str], pred_paths: List[str]) -> List[str]:
