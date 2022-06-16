@@ -24,7 +24,7 @@ from ..common.typing import BDD100KConfig
 from ..common.utils import (
     group_and_sort_files,
     list_files,
-    load_bdd100k_config,
+    get_bdd100k_config,
 )
 from ..label.to_scalabel import bdd100k_to_scalabel
 from .ins_seg import evaluate_ins_seg
@@ -200,19 +200,14 @@ def _load_frames(
 ) -> Tuple[List[Frame], List[Frame]]:
     """Load ground truth and prediction frames."""
     gt_frames = bdd100k_to_scalabel(load(gt_base, nproc).frames, config)
-    result_frames = bdd100k_to_scalabel(
-        load(result_path, nproc).frames, config
-    )
+    result_frames = bdd100k_to_scalabel(load(result_path, nproc).frames, config)
     return gt_frames, result_frames
 
 
 def run() -> None:
     """Main."""
     args = parse_args()
-    if args.config is not None:
-        bdd100k_config = load_bdd100k_config(args.config)
-    else:
-        bdd100k_config = load_bdd100k_config(args.task)
+    bdd100k_config = get_bdd100k_config(args.task, None, args.config)
 
     if args.task in ["det", "box_track", "pose"]:
         gt_frames, result_frames = _load_frames(

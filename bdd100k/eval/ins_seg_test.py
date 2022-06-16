@@ -7,7 +7,7 @@ import numpy as np
 from PIL import Image
 from scalabel.common.typing import NDArrayF64, NDArrayU8
 
-from ..common.utils import list_files, load_bdd100k_config
+from ..common.utils import list_files, get_bdd100k_config
 from .ins_seg import evaluate_ins_seg
 
 
@@ -18,7 +18,7 @@ class TestBDD100KInsSegEval(unittest.TestCase):
     gt_base = f"{cur_dir}/testcases/ins_seg/gt"
     pred_base = f"{cur_dir}/testcases/ins_seg/pred"
     pred_json = f"{cur_dir}/testcases/ins_seg/pred.json"
-    bdd100k_config = load_bdd100k_config("ins_seg")
+    bdd100k_config = get_bdd100k_config("ins_seg")
     result = evaluate_ins_seg(
         list_files(gt_base, ".png", with_prefix=True),
         list_files(pred_base, ".png", with_prefix=True),
@@ -30,19 +30,17 @@ class TestBDD100KInsSegEval(unittest.TestCase):
     def test_frame(self) -> None:
         """Test case for the function frame()."""
         data_frame = self.result.pd_frame()
-        categories = set(
-            [
-                "pedestrian",
-                "rider",
-                "car",
-                "truck",
-                "bus",
-                "train",
-                "motorcycle",
-                "bicycle",
-                "OVERALL",
-            ]
-        )
+        categories = {
+            "pedestrian",
+            "rider",
+            "car",
+            "truck",
+            "bus",
+            "train",
+            "motorcycle",
+            "bicycle",
+            "OVERALL",
+        }
         self.assertSetEqual(categories, set(data_frame.index.values))
 
         data_arr = data_frame.to_numpy()

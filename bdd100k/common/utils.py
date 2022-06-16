@@ -69,8 +69,8 @@ def check_bdd100k_ignored(label: Label) -> bool:
     return check_ignored(label)
 
 
-def get_bdd100k_config(cfg_path: str) -> BDD100KConfig:
-    """Obtains a bdd100k config from the filesystem."""
+def load_bdd100k_config(cfg_path: str) -> BDD100KConfig:
+    """Loads a bdd100k config from the filesystem."""
     if not cfg_path.endswith("toml"):
         cfg_path = osp.join(
             osp.split(osp.dirname(osp.abspath(__file__)))[0],
@@ -82,16 +82,16 @@ def get_bdd100k_config(cfg_path: str) -> BDD100KConfig:
     return BDD100KConfig(**config)
 
 
-def load_bdd100k_config(
-    mode: str, dataset: Optional[Dataset], config: Optional[str]
+def get_bdd100k_config(
+    mode: str, dataset: Optional[Dataset] = None, config: Optional[str] = None
 ) -> BDD100KConfig:
-    """Load a task-specific config."""
+    """Get a task-specific config."""
     if config is not None:
-        return get_bdd100k_config(config)
+        return load_bdd100k_config(config)
     elif dataset is not None and dataset.config is not None:
         return BDD100KConfig(config=dataset.config)
     else:
-        return get_bdd100k_config(mode)
+        return load_bdd100k_config(mode)
 
 
 def reorder_preds(gt_paths: List[str], pred_paths: List[str]) -> List[str]:

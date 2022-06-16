@@ -10,7 +10,7 @@ from scalabel.common.typing import NDArrayU8
 from scalabel.label.io import load
 from scalabel.label.typing import Config, Frame, Label
 
-from ..common.utils import load_bdd100k_config
+from ..common.utils import get_bdd100k_config
 from .to_mask import (
     insseg_to_bitmasks,
     panseg_to_bitmasks,
@@ -56,7 +56,7 @@ class TestToMasks(unittest.TestCase):
         else:
             json_path = f"{cur_dir}/testcases/example_annotation.json"
         frames = load(json_path).frames
-        bdd100k_config = load_bdd100k_config(task_name)
+        bdd100k_config = get_bdd100k_config(task_name)
         convert_func(frames, self.test_out, bdd100k_config.scalabel, 1)
         output_path = os.path.join(self.test_out, output_name)
         mask: NDArrayU8 = np.asarray(Image.open(output_path), dtype=np.uint8)

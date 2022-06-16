@@ -17,7 +17,7 @@ from tqdm import tqdm
 
 from ..common.bitmask import parse_bitmask
 from ..common.typing import BDD100KConfig
-from ..common.utils import list_files, load_bdd100k_config
+from ..common.utils import list_files, get_bdd100k_config
 from ..eval.ins_seg import parse_res_bitmask
 
 ToRLEFunc = Callable[[Frame, str, List[Category]], Frame]
@@ -150,7 +150,7 @@ def main() -> None:
 
     assert os.path.isdir(args.input)
 
-    bdd100k_config = load_bdd100k_config(
+    bdd100k_config = get_bdd100k_config(
         args.mode, load(args.input, args.nproc), args.config
     )
 

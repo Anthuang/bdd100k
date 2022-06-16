@@ -6,7 +6,7 @@ from scalabel.label.io import load
 from scalabel.label.typing import Frame
 from scalabel.label.utils import get_leaf_categories
 
-from ..common.utils import load_bdd100k_config
+from ..common.utils import get_bdd100k_config
 from .to_rle import insseg_to_rle, segtrack_to_rle, semseg_to_rle
 
 
@@ -21,7 +21,7 @@ class TestToRLE(unittest.TestCase):
         mask_dir = "./testcases/to_rle/ins_seg/masks"
         score = "./testcases/to_rle/ins_seg/scores.json"
         categories = get_leaf_categories(
-            load_bdd100k_config("ins_seg").scalabel.categories
+            get_bdd100k_config("ins_seg").scalabel.categories
         )
         frame = load(score).frames[0]
         assert frame.labels is not None
@@ -38,7 +38,7 @@ class TestToRLE(unittest.TestCase):
         mask_dir = "./testcases/to_rle/sem_seg/masks"
         mask = "0.jpg"
         categories = get_leaf_categories(
-            load_bdd100k_config("sem_seg").scalabel.categories
+            get_bdd100k_config("sem_seg").scalabel.categories
         )
         frame = Frame(name=mask)
 
@@ -52,7 +52,7 @@ class TestToRLE(unittest.TestCase):
         mask_dir = "./testcases/to_rle/seg_track/masks"
         masks = ["0/0-1.jpg", "0/0-2.jpg"]
         categories = get_leaf_categories(
-            load_bdd100k_config("seg_track").scalabel.categories
+            get_bdd100k_config("seg_track").scalabel.categories
         )
         frames = [Frame(name=mask) for mask in masks]
 

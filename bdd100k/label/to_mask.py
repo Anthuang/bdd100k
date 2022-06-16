@@ -23,7 +23,7 @@ from tqdm import tqdm
 
 from ..common.logger import logger
 from ..common.typing import BDD100KConfig
-from ..common.utils import get_bdd100k_instance_id, load_bdd100k_config
+from ..common.utils import get_bdd100k_instance_id, get_bdd100k_config
 from .label import drivables, labels, lane_categories
 from .to_coco import parse_args
 from .to_scalabel import bdd100k_to_scalabel
@@ -484,7 +484,7 @@ def main() -> None:
     )
 
     dataset = load(args.input, args.nproc)
-    bdd100k_config = load_bdd100k_config(args.mode, dataset, args.config)
+    bdd100k_config = get_bdd100k_config(args.mode, dataset, args.config)
 
     if args.mode in ["ins_seg", "seg_track"]:
         frames = bdd100k_to_scalabel(dataset.frames, bdd100k_config)

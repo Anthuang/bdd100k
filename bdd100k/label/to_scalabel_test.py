@@ -5,7 +5,7 @@ import unittest
 
 from scalabel.label.io import load
 
-from ..common.utils import load_bdd100k_config
+from ..common.utils import get_bdd100k_config
 from .to_scalabel import IGNORED, bdd100k_to_scalabel
 
 
@@ -17,7 +17,7 @@ class TestBDD100KToScalabel(unittest.TestCase):
         cur_dir = os.path.dirname(os.path.abspath(__file__))
         dataset = load(f"{cur_dir}/testcases/example_ignore_annotation.json")
         frames = dataset.frames
-        bdd100k_config = load_bdd100k_config("box_track")
+        bdd100k_config = get_bdd100k_config("box_track")
         new_frames = bdd100k_to_scalabel(copy.deepcopy(frames), bdd100k_config)
         self.assertEqual(len(new_frames), 2)
         labels = new_frames[0].labels

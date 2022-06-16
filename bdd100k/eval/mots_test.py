@@ -5,11 +5,7 @@ import unittest
 import numpy as np
 from scalabel.common.typing import NDArrayF64
 
-from ..common.utils import (
-    group_and_sort_files,
-    list_files,
-    load_bdd100k_config,
-)
+from ..common.utils import get_bdd100k_config, group_and_sort_files, list_files
 from .mots import evaluate_seg_track
 
 
@@ -21,10 +17,8 @@ class TestEvaluteMOTS(unittest.TestCase):
     b_path = f"{cur_dir}/testcases/mots/result"
 
     gts = group_and_sort_files(list_files(a_path, ".png", with_prefix=True))
-    results = group_and_sort_files(
-        list_files(b_path, ".png", with_prefix=True)
-    )
-    bdd100k_config = load_bdd100k_config("seg_track")
+    results = group_and_sort_files(list_files(b_path, ".png", with_prefix=True))
+    bdd100k_config = get_bdd100k_config("seg_track")
     result = evaluate_seg_track(
         gts,
         results,
@@ -35,23 +29,21 @@ class TestEvaluteMOTS(unittest.TestCase):
     def test_frame(self) -> None:
         """Test case for the function frame()."""
         data_frame = self.result.pd_frame()
-        categories = set(
-            [
-                "human",
-                "vehicle",
-                "bike",
-                "pedestrian",
-                "rider",
-                "car",
-                "truck",
-                "bus",
-                "train",
-                "motorcycle",
-                "bicycle",
-                "AVERAGE",
-                "OVERALL",
-            ]
-        )
+        categories = {
+            "human",
+            "vehicle",
+            "bike",
+            "pedestrian",
+            "rider",
+            "car",
+            "truck",
+            "bus",
+            "train",
+            "motorcycle",
+            "bicycle",
+            "AVERAGE",
+            "OVERALL",
+        }
         self.assertSetEqual(categories, set(data_frame.index.values))
 
         data_arr = data_frame.to_numpy()

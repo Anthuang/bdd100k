@@ -36,7 +36,7 @@ from ..common.utils import (
     get_bdd100k_instance_id,
     group_and_sort_files,
     list_files,
-    load_bdd100k_config,
+    get_bdd100k_config,
 )
 from .to_scalabel import bdd100k_to_scalabel
 
@@ -506,13 +506,13 @@ def main() -> None:
             seg_track=bitmask2coco_seg_track,
         )[args.mode]
 
-        bdd100k_config = load_bdd100k_config(args.mode, None, args.config)
+        bdd100k_config = get_bdd100k_config(args.mode, None, args.config)
         logger.info("Start format converting...")
         coco = convert_function(args.input, bdd100k_config.scalabel, args.nproc)
     else:
         logger.info("Loading annotations...")
         dataset = load(args.input, args.nproc)
-        bdd100k_config = load_bdd100k_config(args.mode, dataset, args.config)
+        bdd100k_config = get_bdd100k_config(args.mode, dataset, args.config)
 
         if args.mode in ["det", "box_track", "pose"]:
             convert_func = dict(
